@@ -20,6 +20,8 @@ jobs:
       release_built: ${{ steps.set-output.outputs.release_built }}
     steps:
     - uses: actions/checkout@v4
+    - name: Configure toolchain
+      run: rustup target add thumbv6m-none-eabi
     - name: Build
       run: cargo build --profile ${{ matrix.BUILD_TARGET }} --verbose
     - name: Run tests
