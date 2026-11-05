@@ -13,10 +13,14 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        BUILD_TARGET: [release]
+    outputs:
+      release_built: ${{ steps.set-output.outputs.release_built }}
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --profile ${{ matrix.BUILD_TARGET }} --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test  --profile ${{ matrix.BUILD_TARGET }} --verbose
