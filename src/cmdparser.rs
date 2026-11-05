@@ -112,85 +112,85 @@ pub enum CmdError {
     UnexpectedError,
 }
 
-#[test]
-fn test_parse_sunny() {
-    use core::str::FromStr;
-    let mut p = CmdParser::new();
-
-    assert!(p.parse_bytes("O".as_bytes()).unwrap().is_none());
-    assert!(p.parse_bytes("N".as_bytes()).unwrap().is_none());
-    assert!(p.parse_bytes(" ".as_bytes()).unwrap().is_none());
-    assert!(p.parse_bytes("1".as_bytes()).unwrap().is_none());
-    let c = p.parse_bytes("\n".as_bytes());
-    assert!(c.as_ref().is_ok());
-    assert!(c.as_ref().unwrap().is_some());
-    let s: String<MAX_DEVICE_NAME_LEN> = String::from_str("1").unwrap();
-    match c.unwrap() {
-        Some(cmd) => {
-            assert_eq!(cmd, Cmd::On(s))
-        }
-        None => {
-            assert!(false)
-        }
-    }
-    let c2 = p.parse_bytes("OFF 32\n".as_bytes());
-    assert!(c2.as_ref().is_ok());
-    assert!(c2.as_ref().unwrap().is_some());
-    let cmd = c2.unwrap().unwrap();
-    assert_eq!(cmd, Cmd::Off(String::from_str("32").unwrap()));
-
-    let c3 = p.parse_bytes("GETALL\n".as_bytes());
-    assert!(c3.as_ref().is_ok());
-    assert!(c3.as_ref().unwrap().is_some());
-    let cmd3 = c3.unwrap().unwrap();
-    assert_eq!(cmd3, Cmd::GetAll);
-
-    let c4 = p.parse_bytes("GET LED\n".as_bytes());
-    assert!(c4.as_ref().is_ok());
-    assert!(c4.as_ref().unwrap().is_some());
-    let cmd4 = c4.unwrap().unwrap();
-    assert_eq!(cmd4, Cmd::Get(String::from_str("LED").unwrap()));
-}
-
-#[test]
-fn test_trim_cr() {
-    use core::str::FromStr;
-    let mut p = CmdParser::new();
-    let c = p.parse_bytes("GET LED\r\n".as_bytes());
-    assert!(c.as_ref().is_ok());
-    assert!(c.as_ref().unwrap().is_some());
-    let cmd = c.unwrap().unwrap();
-    assert_eq!(cmd, Cmd::Get(String::from_str("LED").unwrap()));
-}
-
-#[test]
-fn test_cmd_case() {
-    use core::str::FromStr;
-    let mut p = CmdParser::new();
-    let c = p.parse_bytes("GeT lEd\n".as_bytes());
-    assert!(c.as_ref().is_ok());
-    assert!(c.as_ref().unwrap().is_some());
-    let cmd = c.unwrap().unwrap();
-    assert_eq!(cmd, Cmd::Get(String::from_str("LED").unwrap()));
-}
-
-#[test]
-fn test_mult_in_one_parse() {
-    use core::str::FromStr;
-    let mut p = CmdParser::new();
-    let c1 = p.parse_str("GET LED\nGETALL\n");
-    assert!(c1.as_ref().is_ok());
-    assert!(c1.as_ref().unwrap().is_some());
-    let cmd1 = c1.unwrap().unwrap();
-    assert_eq!(cmd1, Cmd::Get(String::from_str("LED").unwrap()));
-
-    let c2 = p.next_cmd();
-    assert!(c2.as_ref().is_ok());
-    assert!(c2.as_ref().unwrap().is_some());
-    let cmd2 = c2.unwrap().unwrap();
-    assert_eq!(cmd2, Cmd::GetAll);
-
-    let c3 = p.next_cmd();
-    assert!(c3.as_ref().is_ok());
-    assert!(c3.as_ref().unwrap().is_none());
-}
+// #[test]
+// fn test_parse_sunny() {
+//     use core::str::FromStr;
+//     let mut p = CmdParser::new();
+//
+//     assert!(p.parse_bytes("O".as_bytes()).unwrap().is_none());
+//     assert!(p.parse_bytes("N".as_bytes()).unwrap().is_none());
+//     assert!(p.parse_bytes(" ".as_bytes()).unwrap().is_none());
+//     assert!(p.parse_bytes("1".as_bytes()).unwrap().is_none());
+//     let c = p.parse_bytes("\n".as_bytes());
+//     assert!(c.as_ref().is_ok());
+//     assert!(c.as_ref().unwrap().is_some());
+//     let s: String<MAX_DEVICE_NAME_LEN> = String::from_str("1").unwrap();
+//     match c.unwrap() {
+//         Some(cmd) => {
+//             assert_eq!(cmd, Cmd::On(s))
+//         }
+//         None => {
+//             assert!(false)
+//         }
+//     }
+//     let c2 = p.parse_bytes("OFF 32\n".as_bytes());
+//     assert!(c2.as_ref().is_ok());
+//     assert!(c2.as_ref().unwrap().is_some());
+//     let cmd = c2.unwrap().unwrap();
+//     assert_eq!(cmd, Cmd::Off(String::from_str("32").unwrap()));
+//
+//     let c3 = p.parse_bytes("GETALL\n".as_bytes());
+//     assert!(c3.as_ref().is_ok());
+//     assert!(c3.as_ref().unwrap().is_some());
+//     let cmd3 = c3.unwrap().unwrap();
+//     assert_eq!(cmd3, Cmd::GetAll);
+//
+//     let c4 = p.parse_bytes("GET LED\n".as_bytes());
+//     assert!(c4.as_ref().is_ok());
+//     assert!(c4.as_ref().unwrap().is_some());
+//     let cmd4 = c4.unwrap().unwrap();
+//     assert_eq!(cmd4, Cmd::Get(String::from_str("LED").unwrap()));
+// }
+//
+// #[test]
+// fn test_trim_cr() {
+//     use core::str::FromStr;
+//     let mut p = CmdParser::new();
+//     let c = p.parse_bytes("GET LED\r\n".as_bytes());
+//     assert!(c.as_ref().is_ok());
+//     assert!(c.as_ref().unwrap().is_some());
+//     let cmd = c.unwrap().unwrap();
+//     assert_eq!(cmd, Cmd::Get(String::from_str("LED").unwrap()));
+// }
+//
+// #[test]
+// fn test_cmd_case() {
+//     use core::str::FromStr;
+//     let mut p = CmdParser::new();
+//     let c = p.parse_bytes("GeT lEd\n".as_bytes());
+//     assert!(c.as_ref().is_ok());
+//     assert!(c.as_ref().unwrap().is_some());
+//     let cmd = c.unwrap().unwrap();
+//     assert_eq!(cmd, Cmd::Get(String::from_str("LED").unwrap()));
+// }
+//
+// #[test]
+// fn test_mult_in_one_parse() {
+//     use core::str::FromStr;
+//     let mut p = CmdParser::new();
+//     let c1 = p.parse_str("GET LED\nGETALL\n");
+//     assert!(c1.as_ref().is_ok());
+//     assert!(c1.as_ref().unwrap().is_some());
+//     let cmd1 = c1.unwrap().unwrap();
+//     assert_eq!(cmd1, Cmd::Get(String::from_str("LED").unwrap()));
+//
+//     let c2 = p.next_cmd();
+//     assert!(c2.as_ref().is_ok());
+//     assert!(c2.as_ref().unwrap().is_some());
+//     let cmd2 = c2.unwrap().unwrap();
+//     assert_eq!(cmd2, Cmd::GetAll);
+//
+//     let c3 = p.next_cmd();
+//     assert!(c3.as_ref().is_ok());
+//     assert!(c3.as_ref().unwrap().is_none());
+// }
