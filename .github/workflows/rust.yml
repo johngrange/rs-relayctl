@@ -31,20 +31,22 @@ jobs:
     - name: Build
       run: cargo build --profile ${{ matrix.BUILD_TARGET }} --verbose
     - name: Convert to UF2
-      run: elf2uf2-rs convert --family rp2040 target/thumbv6m-none-eabi/release/rs-relayctl target/thumbv6m-none-eabi/release/rs-relayctl.uf2
+      run: elf2uf2-rs convert --family rp2040 target/thumbv6m-none-eabi/release/rs-relayctl rs-relayctl.uf2
+    - name: Create output zipfile
+      run: zip -j rs-relayctl.zip rs-relayctl.uf2
     - name: Upload UF2
       uses: actions/upload-artifact@v4
       with:
-        name: rs-relayctl.uf2
-        path: target/thumbv6m-none-eabi/release/rs-relayctl.uf2
+        name: rs-relayctl.uf2.zip
+        path: rs-relayctl.zip
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
-        title: "Development Build"
+        title: "Development Build Binaries"
         files: |
-          target/thumbv6m-none-eabi/release/rs-relayctl.uf2
+          target/thumbv6m-none-eabi/release/rs-relayctl.zip
 
     # - name: Run tests
     #   run: cargo test  --profile ${{ matrix.BUILD_TARGET }} --verbose
