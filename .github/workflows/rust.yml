@@ -41,6 +41,7 @@ jobs:
         name: Latest
         tag: latest
         artifacts: "target/thumbv6m-none-eabi/release/rs-relayctl.uf2"
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     # - name: Run tests
     #   run: cargo test  --profile ${{ matrix.BUILD_TARGET }} --verbose
