@@ -22,7 +22,11 @@ jobs:
     - uses: actions/checkout@v4
     - name: Configure toolchain
       run: rustup target add thumbv6m-none-eabi
+    - name: Install elf converter
+      run: cargo install --git https://github.com/JoNil/elf2uf2-rs.git --rev f14bf2d981772cd9fbe5bac33b685719caac1add
     - name: Build
       run: cargo build --profile ${{ matrix.BUILD_TARGET }} --verbose
+    - name: Convert to UF2
+      run: elf2uf2-rs convert --family rp2040 target/thumbv6m-none-eabi/release/rs-relayctl target/thumbv6m-none-eabi/release/rs-relayctl.uf2
     # - name: Run tests
     #   run: cargo test  --profile ${{ matrix.BUILD_TARGET }} --verbose
