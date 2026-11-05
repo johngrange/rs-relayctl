@@ -20,6 +20,8 @@ jobs:
       release_built: ${{ steps.set-output.outputs.release_built }}
     steps:
     - uses: actions/checkout@v4
+    - name: Install packages
+      run: sudo apt-get update && sudo apt-get install -y libudev-dev
     - name: Configure toolchain
       run: rustup target add thumbv6m-none-eabi
     - name: Install elf converter
