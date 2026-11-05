@@ -30,5 +30,10 @@ jobs:
       run: cargo build --profile ${{ matrix.BUILD_TARGET }} --verbose
     - name: Convert to UF2
       run: elf2uf2-rs convert --family rp2040 target/thumbv6m-none-eabi/release/rs-relayctl target/thumbv6m-none-eabi/release/rs-relayctl.uf2
+    - name: Upload UF2
+      uses: actions/upload-artifact@v4
+      with:
+        name: rs-relayctl.uf2
+        path: target/thumbv6m-none-eabi/release/rs-relayctl.uf2
     # - name: Run tests
     #   run: cargo test  --profile ${{ matrix.BUILD_TARGET }} --verbose
