@@ -35,5 +35,12 @@ jobs:
       with:
         name: rs-relayctl.uf2
         path: target/thumbv6m-none-eabi/release/rs-relayctl.uf2
+    - name: Create latest release
+      uses: ncipollo/release-action@v1
+      with:
+        name: Latest
+        tag: latest
+        artifacts: "target/thumbv6m-none-eabi/release/rs-relayctl.uf2"
+
     # - name: Run tests
     #   run: cargo test  --profile ${{ matrix.BUILD_TARGET }} --verbose
